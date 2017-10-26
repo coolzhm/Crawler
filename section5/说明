@@ -1,0 +1,7 @@
+20171025
+section5为第五章，主要介绍正则表达式、Cookie，包括内容为
+正则表达式的基础知识  regular.py
+正则表达式的常见函数  regular_func.py
+正则表达式常见实例解析  regular_demo.py
+
+Cookiejar实战精析   Cookie.py
