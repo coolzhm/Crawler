@@ -3,6 +3,11 @@ import scrapy
 import urllib.request
 from scrapy.http import Request, FormRequest
 
+'''
+爬取豆瓣网站返回403错误提示，此时需要在settings.py文件中增加下列配置即可爬取
+USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
+
+'''
 
 class LoginspdSpider(scrapy.Spider):
     name = "login"
@@ -29,7 +34,7 @@ class LoginspdSpider(scrapy.Spider):
         if len(captcha) > 0:
             print("此时有验证码")
             # 设置将验证码图片存储到本地的本地地址中
-            localpath = "H:/Python/Project/PythonSpiderLearning/Crawler/shizhan/loginpjt/loginpjt/captcha.png"
+            localpath = "C:/MyWorkSpace/GitHubProject/Crawler/shizhan/loginpjt/loginpjt/captcha.png"
             # 将服务器中的验证码图片存储到本地，供我们在本地直接进行查看
             urllib.request.urlretrieve(captcha[0], filename=localpath)
             print("请查看本地图片captcha.png并输入对应验证码：")
@@ -80,7 +85,7 @@ class LoginspdSpider(scrapy.Spider):
         # 日记标题Xpath表达式
         xnotetitle = "//div[@class='note-header pl2']/a/@title"
         # 日记发表时间Xpath表达式
-        xnotetime = "//div[@class='note-header pl2']//span[@class='p1']/text()"
+        xnotetime = "//div[@class='note-header pl2']//span[@class='pl']/text()"
         # 日记内容Xpath表达式
         xnotecontent = "//div[@class='mbtr2']/div[@class='note']/text()"
         # 日记连接Xpath表达式
@@ -93,9 +98,10 @@ class LoginspdSpider(scrapy.Spider):
         notecontent = response.xpath(xnotecontent).extract()
         noteurl = response.xpath(xnoteurl).extract()
         print("网页标题是：" + title[0])
+
         # 可能有多篇日记，通过for循环一次遍历
         for i in range(0, len(notetitle)):
-            print("第" + str(i) + "篇文章的信息如下：")
+            print("第" + str(i+1) + "篇文章的信息如下：")
             print("文章的标题为：" + notetitle[i])
             print("文章发表时间为：" + notetime[i])
             print("文章内容为：" + notecontent[i])
