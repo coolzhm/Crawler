@@ -2,12 +2,14 @@
 import scrapy
 import urllib.request
 from scrapy.http import Request, FormRequest
+from bs4 import BeautifulSoup
 
 '''
 爬取豆瓣网站返回403错误提示，此时需要在settings.py文件中增加下列配置即可爬取
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
 
 '''
+
 
 class LoginspdSpider(scrapy.Spider):
     name = "login"
@@ -77,6 +79,8 @@ class LoginspdSpider(scrapy.Spider):
                                           )]
 
     def next(self, response):
+        soup = BeautifulSoup(response.body,'lxml')
+        print(soup)
         print("此时已经登录完成并怕去了个人中心的数据")
         # 此时response为个人中心网页中的数据
         # 以下通过Xpath方法分别提取个人中心中该用户的相关信息
@@ -101,7 +105,7 @@ class LoginspdSpider(scrapy.Spider):
 
         # 可能有多篇日记，通过for循环一次遍历
         for i in range(0, len(notetitle)):
-            print("第" + str(i+1) + "篇文章的信息如下：")
+            print("第" + str(i + 1) + "篇文章的信息如下：")
             print("文章的标题为：" + notetitle[i])
             print("文章发表时间为：" + notetime[i])
             print("文章内容为：" + notecontent[i])
