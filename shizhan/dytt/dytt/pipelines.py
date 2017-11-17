@@ -35,11 +35,11 @@ class SaveMainUrlToMySQLPipeline(object):
     def process_item(self, item, spider):
         # 创建连接
         connection = pymysql.connect(**self.config)
-        print(">>>>>>>>>>>>>>>> 创建连接 <<<<<<<<<<<<<<<<<")
+        # print(">>>>>>>>>>>>>>>> 创建连接 <<<<<<<<<<<<<<<<<")
         try:
             with connection.cursor() as cursor:
-                sql = "SELECT * FROM dytt_domain WHERE 1 = 1 AND title = '{0}' AND full_url = '{1}'".format(
-                    item['title'], item['full_url'])
+                sql = "SELECT * FROM dytt_domain WHERE 1 = 1  AND full_url = '{0}'".format(
+                     item['full_url'])
                 # print('------>>>>>>>>>>执行查询SQL为：')
                 # print(sql)
                 rr = cursor.execute(sql)
