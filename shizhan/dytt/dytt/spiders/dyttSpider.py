@@ -17,7 +17,7 @@ import sys
 
 class DyttSpider(scrapy.Spider):
     name = "dytt"
-    allowed_domains = ["ygdy8.net", "www.dytt8.net"]
+    allowed_domains = ["www.ygdy8.net", "www.dytt8.net"]
 
     # 复写设置，用于指定pipelines执行
     custom_settings = {
@@ -34,22 +34,32 @@ class DyttSpider(scrapy.Spider):
     def start_requests(self):
         print("准备爬取...")
         print(self.settings["MYSQL_CONFIG"])
-        return [Request("http://www.dytt8.net/html/gndy/china/index.html", callback=self.parse)]
+        return [Request("http://www.dytt8.net/html/gndy/china/index.html", headers=self.header, callback=self.parse)]
 
     def parse(self, response):
         print("进入爬取方法..")
         soup = BeautifulSoup(response.body, "lxml")
-        for li in soup.find_all('div', class_='co_content8'):
+        for li in soup.find_all('div', id='menu'):
             for a in li.find_all('a'):
                 item = DyttMainItem()
                 item['url'] = a.get('href')
+                # print(item['url'])
                 item['title'] = a.get_text()
-                item['full_url'] = "http://www.dytt8.net" + a.get('href')
-                yield item
+                if "http" in a.get('href'):
+                    item['full_url'] = a.get('href')
+                else:
+                    item['full_url'] = "http://www.dytt8.net" + a.get('href')
+                # print(item['full_url'])
+                if item['full_url'].count("/") > 5:
+                    if "/index" in item['full_url']:
+                        yield item
+
         if (len(self.list) > 0):
             # 获取最后一个元素
             value = self.list.pop()
             print(value)
             print(self.list)
             url = "http://www.dytt8.net/html/gndy/rihan/list_6_" + str(value) + ".html"
-            return [Request(url, callback=self.parse)]
+            print("准备爬取---------->>>>>>>>>>>")
+            print(url)
+            return [Request(url, headers=self.header, callback=self.parse)]
