@@ -1,2 +1,5 @@
 20171115
 loginpjt文件夹是Scrapy项目 模拟登陆爬虫登陆豆瓣网
+dytt文件夹是Scrapy项目 主要是用来爬取电影天堂的数据
+    1、加入RandomUserAgent、RandomProxy中间件，随机生成配置表中配置settings.py中的UserAgent，以及爬取时的代理IP池
+        （随机IP池可以从http://31f.cn/area/%E4%B8%AD%E5%9B%BD/网站获取）

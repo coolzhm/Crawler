@@ -7,7 +7,6 @@
 import pymysql
 import dytt.settings as settings
 
-
 class TestPipeline(object):
     def __init__(self):
         print(">>>>>>>>>>>>>>>> 这个是用来测试的Pipeline <<<<<<<<<<<<<<<<<")
@@ -33,31 +32,37 @@ class SaveMainUrlToMySQLPipeline(object):
         print(">>>>>>>>>>>>>>>> 准备写入MySQL数据库 <<<<<<<<<<<<<<<<<")
 
     def process_item(self, item, spider):
-        # 创建连接
-        connection = pymysql.connect(**self.config)
-        # print(">>>>>>>>>>>>>>>> 创建连接 <<<<<<<<<<<<<<<<<")
-        try:
-            with connection.cursor() as cursor:
-                sql = "SELECT * FROM dytt_domain WHERE 1 = 1  AND full_url = '{0}'".format(
-                     item['full_url'])
-                # print('------>>>>>>>>>>执行查询SQL为：')
-                # print(sql)
-                rr = cursor.execute(sql)
-                row = cursor.fetchall()
-                if (len(row) > 0):
-                    print("已经存在【{0}】【{1}】！".format(item['title'], item['full_url']))
-                    return
+        # if item['full_url'].count("/") > 5:
+        #     if "/index" in item['full_url']:
+                # 创建连接
+                connection = pymysql.connect(**self.config)
+                # print(">>>>>>>>>>>>>>>> 创建连接 <<<<<<<<<<<<<<<<<")
+                try:
+                    with connection.cursor() as cursor:
+                        sql = "SELECT * FROM dytt_domain WHERE 1 = 1  AND full_url = '{0}'".format(
+                             item['full_url'])
+                        # print('------>>>>>>>>>>执行查询SQL为：')
+                        # print(sql)
+                        rr = cursor.execute(sql)
+                        row = cursor.fetchall()
+                        if (len(row) > 0):
+                            print("已经存在【{0}】【{1}】！".format(item['title'], item['full_url']))
+                            return
 
-                sql = "INSERT INTO dytt_domain(id,title,full_url,url,checked)" \
-                      "VALUES (nextval('dytt_domain'),'{0}','{1}','{2}','0')".format(
-                    item['title'], item['full_url'], item['url'])
-                # print('------>>>>>>>>>>执行写入SQL为：')
-                # print(sql)
-                cursor.execute(sql)
-                connection.commit()
-                # print('------>>>>>>>>>>执行写入SQL成功！！')
-        finally:
-            connection.close()
+                        sql = "INSERT INTO dytt_domain(id,title,full_url,url,checked)" \
+                              "VALUES (nextval('dytt_domain'),'{0}','{1}','{2}','0')".format(
+                            item['title'], item['full_url'], item['url'])
+                        # print('------>>>>>>>>>>执行写入SQL为：')
+                        # print(sql)
+                        cursor.execute(sql)
+                        connection.commit()
+                        # print('------>>>>>>>>>>执行写入SQL成功！！')
+                finally:
+                    connection.close()
+        #     else:
+        #         print("连接【{0}】不符合规则！摈弃！！！".format(item["full_url"]))
+        # else:
+        #     print("连接【{0}】不符合规则！摈弃！！！".format(item["full_url"]))
 
     def spider_closed(self, spider):
         print(">>>>>>>>>>>>>>>> 写入MySQL数据库完成 <<<<<<<<<<<<<<<<<")

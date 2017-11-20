@@ -10,7 +10,6 @@
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'dytt'
-
 SPIDER_MODULES = ['dytt.spiders']
 NEWSPIDER_MODULE = 'dytt.spiders'
 
@@ -40,13 +39,63 @@ USER_AGENTS = [
     "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9) Gecko/20080705 Firefox/3.0 Kapiko/3.0",
     "Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5"]
 
+PROXIES = [
+{'ip_port':'223.112.84.30:3128', 'user_passwd': ''},
+{'ip_port':'114.115.140.25:3128', 'user_passwd': ''},
+{'ip_port':'118.178.228.175:3128', 'user_passwd': ''},
+{'ip_port':'112.17.65.50:3128', 'user_passwd': ''},
+{'ip_port':'140.143.90.197:1080', 'user_passwd': ''},
+{'ip_port':'103.244.252.242:3128', 'user_passwd': ''},
+{'ip_port':'114.115.148.181:3128', 'user_passwd': ''},
+{'ip_port':'139.196.17.203:8080', 'user_passwd': ''},
+{'ip_port':'123.206.58.129:1080', 'user_passwd': ''},
+{'ip_port':'123.206.70.19:1080', 'user_passwd': ''},
+{'ip_port':'114.115.217.39:3128', 'user_passwd': ''},
+{'ip_port':'123.207.218.139:8080', 'user_passwd': ''},
+{'ip_port':'123.207.55.239:1080', 'user_passwd': ''},
+{'ip_port':'123.207.58.85:1080', 'user_passwd': ''},
+{'ip_port':'103.12.69.55:1080', 'user_passwd': ''},
+{'ip_port':'139.198.6.166:3128', 'user_passwd': ''},
+{'ip_port':'123.207.154.239:1080', 'user_passwd': ''},
+{'ip_port':'139.199.172.100:3128', 'user_passwd': ''},
+{'ip_port':'139.199.199.222:8080', 'user_passwd': ''},
+{'ip_port':'117.48.199.20:3128', 'user_passwd': ''},
+{'ip_port':'139.224.118.55:3128', 'user_passwd': ''},
+{'ip_port':'139.224.130.225:3128', 'user_passwd': ''},
+{'ip_port':'139.224.131.100:1080', 'user_passwd': ''},
+{'ip_port':'139.199.201.27:808:', 'user_passwd': ''},
+{'ip_port':'120.52.73.173:8080', 'user_passwd': ''},
+{'ip_port':'139.196.243.30:8080', 'user_passwd': ''},
+{'ip_port':'112.17.14.27:8080', 'user_passwd': ''},
+{'ip_port':'139.196.140.130:3128', 'user_passwd': ''},
+{'ip_port':'123.206.93.108:8081', 'user_passwd': ''},
+{'ip_port':'123.207.149.64:8080', 'user_passwd': ''},
+{'ip_port':'112.16.154.190:808:', 'user_passwd': ''},
+{'ip_port':'203.19.33.100:808:', 'user_passwd': ''},
+{'ip_port':'123.207.10.11:1080', 'user_passwd': ''},
+{'ip_port':'112.17.14.39:8080', 'user_passwd': ''},
+{'ip_port':'123.206.75.11:3128', 'user_passwd': ''},
+{'ip_port':'159.226.101.55:8080', 'user_passwd': ''},
+{'ip_port':'123.207.226.100:808:', 'user_passwd': ''},
+{'ip_port':'139.196.154.31:808:', 'user_passwd': ''},
+{'ip_port':'118.193.23.162:3128', 'user_passwd': ''},
+{'ip_port':'112.8.71.142:9999', 'user_passwd': ''},
+{'ip_port':'123.207.174.204:808:', 'user_passwd': ''},
+{'ip_port':'120.219.110.82:9999', 'user_passwd': ''},
+{'ip_port':'112.8.62.76:9999', 'user_passwd': ''},
+{'ip_port':'112.8.235.53:9999', 'user_passwd': ''},
+{'ip_port':'112.16.110.169:9999', 'user_passwd': ''},
+{'ip_port':'123.206.184.191:8080', 'user_passwd': ''},
+{'ip_port':'139.196.210.55:1080', 'user_passwd': ''},
+{'ip_port':'139.196.254.126:1080', 'user_passwd': ''}
+]
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
 # Configure a delay for requests for the same website (default: 0)
 # See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -71,9 +120,11 @@ COOKIES_ENABLED = False
 
 # Enable or disable downloader middlewares
 # See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    'dytt.middlewares.MyCustomDownloaderMiddleware': 543,
-#}
+DOWNLOADER_MIDDLEWARES = {
+    # 'dytt.middlewares.MyCustomDownloaderMiddleware': 543,
+    'dytt.middlewares.RandomUserAgent': 1,
+    # 'dytt.middlewares.RandomProxy': 100,
+}
 
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
