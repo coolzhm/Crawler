@@ -77,7 +77,7 @@ class DoubanSpider(scrapy.Spider):
                 # 设置登陆账号，格式为账号字段名：具体账号
                 "form_email": "357270546@qq.com",
                 # 设置登陆密码，格式为密码字段名：具体密码
-                "form_password": "Aa8616645",
+                "form_password": "****",
                 # 设置验证码，格式为验证码字段名：具体验证码
                 "captcha-solution": captcha_value,
                 # 设置需要转向的网址
@@ -90,7 +90,7 @@ class DoubanSpider(scrapy.Spider):
                 # 设置登陆账号，格式为账号字段名：具体账号
                 "form_email": "357270546@qq.com",
                 # 设置登陆密码，格式为密码字段名：具体密码
-                "form_password": "Aa8616645",
+                "form_password": "****",
                 # 设置需要转向的网址
                 "redir": "https://movie.douban.com/subject/25821634/comments?start=40&limit=20&sort=new_score&status=P&percent_type="
             }
