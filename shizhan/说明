@@ -1,5 +1,33 @@
 20171115
 loginpjt文件夹是Scrapy项目 模拟登陆爬虫登陆豆瓣网
+
 dytt文件夹是Scrapy项目 主要是用来爬取电影天堂的数据
     1、加入RandomUserAgent、RandomProxy中间件，随机生成配置表中配置settings.py中的UserAgent，以及爬取时的代理IP池
         （随机IP池可以从http://31f.cn/area/%E4%B8%AD%E5%9B%BD/网站获取）
+
+DouBanFilmCritic是Scrapy项目 主要用于：
+    爬取豆瓣网站上[雷神3：诸神黄昏]电影的短评，爬取的内容包括，评论人、评论内容、评论星星数、以及
+    评论人是否看过电影、评论时间、以及评论是否有用信息，并将爬取内容存储到mysql数据库。可用于后续
+    对评论内容进行分析！
+    用到的技术包括：
+    1、正则
+    2、bs4
+    3、xpath
+    4、随机User-Agent防禁止
+
+
+    遇到的问题点：
+    1、Scrapy "Filtered duplicate request" 结束运行
+    此问题可参考 http://www.jianshu.com/p/d9d2e082af3a
+    在Request中加入dont_filter=True，例如
+    yield scrapy.Request(
+        info_url,
+        cookies=self.cookie,
+        callback=self.parse_info,
+        dont_filter=True,
+        meta={
+            'item': item,
+            'date': meta_data['date'],
+            'weibo_id': meta_data['weibo_id']
+        }
+    )
