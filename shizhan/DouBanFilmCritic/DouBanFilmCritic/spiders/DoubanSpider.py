@@ -158,13 +158,3 @@ class DoubanSpider(scrapy.Spider):
 
         yield Request(url=parse.urljoin(response.url, url), meta={'cookiejar': response.meta["cookiejar"]},
                       callback=self.next, dont_filter=True)
-        # return [Request(url, meta={'cookiejar': response.meta["cookiejar"]}, callback=self.next)]
-        # return scrapy.Request(url, callback=self.next, meta={"cookiejar": response.meta["cookiejar"]})
-        # return [FormRequest.from_response(url=url,
-        #                                   # 设置cookie信息
-        #                                   meta={"cookiejar": response.meta["cookiejar"]},
-        #                                   # 设置headers信息模拟成浏览器
-        #                                   headers=self.header,
-        #                                   # 设置毁掉函数，此时毁掉函数为next（）
-        #                                   callback=self.next,
-        #                                   )]
