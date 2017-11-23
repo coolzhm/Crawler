@@ -96,12 +96,12 @@ class stocksSpider(scrapy.Spider):
         #     values[30], values[31], "{0}%".format(ratio))
         str = "[{3} {4}]【{0}】 【{1}|[{2} {5}]】".format(
             values[0], values[2], values[3], values[30], values[31], "{0}%".format(ratio))
-        str2 = "买【{0} [{1}]】【{2} [{3}]】【{4} [{5}]】【{6} [{7}]】【{8} [{9}]】".format(
+        str2 = "B【{0} [{1}]】【{2} [{3}]】【{4} [{5}]】【{6} [{7}]】【{8} [{9}]】".format(
             values[11], int(values[10]) / 100, values[13], int(values[12]) / 100, values[15], int(values[14]) / 100,
             values[17], int(values[16]) / 100, values[19],
                         int(values[18]) / 100
         )
-        str3 = "卖【{0} [{1}]】【{2} [{3}]】【{4} [{5}]】【{6} [{7}]】【{8} [{9}]】".format(
+        str3 = "S【{0} [{1}]】【{2} [{3}]】【{4} [{5}]】【{6} [{7}]】【{8} [{9}]】".format(
             values[21], int(values[20]) / 100, values[23], int(values[22]) / 100, values[25], int(values[24]) / 100,
             values[27], int(values[26]) / 100, values[29],
                         int(values[28]) / 100
