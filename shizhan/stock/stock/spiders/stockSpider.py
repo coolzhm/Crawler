@@ -4,6 +4,7 @@ import urllib.request
 from scrapy.http import Request, FormRequest
 from bs4 import BeautifulSoup
 import re
+import stock.settings  as settings
 
 '''
 Sina股票数据接口
@@ -44,36 +45,67 @@ var hq_str_sh601006="大秦铁路, 27.55, 27.25, 26.91, 27.55, 26.20, 26.91, 26.
                     ------From: <http://blog.csdn.net/juncailiao/article/details/52159514>
 '''
 
+
 class stocksSpider(scrapy.Spider):
     name = "stock"
-    list = ['sh601006', 'sz000016']
+    list = []
     header = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
 
     def start_requests(self):
-        print("准备爬取...")
+        # print("准备爬取...")
 
         return [
-            Request("http://hq.sinajs.cn/list=sh601003,sh601001", headers=self.header, meta={'cookiejar': 1},
+            Request("http://hq.sinajs.cn/list=sz000016", headers=self.header, meta={'cookiejar': 1},
                     callback=self.parse)]
 
     def parse(self, response):
-        print("进入爬取")
+        url = "http://hq.sinajs.cn/list="
+        try:
+            self.list = settings.LIST
+        except:
+            self.list = ['sz000016']
+
+        url = url + ','.join(self.list)
+        # print(url)
+        # print("进入爬取")
         soup = BeautifulSoup(response.body, 'lxml')
         # print(soup)
         for a in soup.find_all('p'):
             # print(a.string)
             for b in a.string.split(';'):
                 for c in re.findall(r'".*"', b):
-                    self.domain(c)
-        print(response.url)
+                    # print(c.encode("utf-8"))
+                    if c != "":
+                        c = c.encode("utf-8").decode("GBK")
+
+                        # print(c)
+                        self.domain(c)
+        # print(response.url)
 
         return [
-            Request(response.url, dont_filter=True, headers=self.header, meta={'cookiejar': 1},
+            Request(url, dont_filter=True, headers=self.header, meta={'cookiejar': 1},
                     callback=self.parse)]
 
     def domain(self, value):
-        value = str(value)
+        # value = str(value)
         values = value.split(",")
-        for a in values:
-            print(a)
+        ratio = round(round((float(values[3]) - float(values[2])) / float(values[2]), 4) * 100, 2)
+        # str = "[{7} {8}]【{0}】 【{1}|[{2} {9}]】 买【{3}|[{4}]】 卖【{5}|[{6}]】".format(
+        #     values[0], values[2], values[3], values[11], int(values[10]) / 100, values[21], int(values[20]) / 100,
+        #     values[30], values[31], "{0}%".format(ratio))
+        str = "[{3} {4}]【{0}】 【{1}|[{2} {5}]】".format(
+            values[0], values[2], values[3], values[30], values[31], "{0}%".format(ratio))
+        str2 = "买【{0} [{1}]】【{2} [{3}]】【{4} [{5}]】【{6} [{7}]】【{8} [{9}]】".format(
+            values[11], int(values[10]) / 100, values[13], int(values[12]) / 100, values[15], int(values[14]) / 100,
+            values[17], int(values[16]) / 100, values[19],
+                        int(values[18]) / 100
+        )
+        str3 = "卖【{0} [{1}]】【{2} [{3}]】【{4} [{5}]】【{6} [{7}]】【{8} [{9}]】".format(
+            values[21], int(values[20]) / 100, values[23], int(values[22]) / 100, values[25], int(values[24]) / 100,
+            values[27], int(values[26]) / 100, values[29],
+                        int(values[28]) / 100
+        )
+        print(str)
+        print(str2)
+        print(str3)

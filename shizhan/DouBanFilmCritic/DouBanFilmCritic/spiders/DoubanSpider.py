@@ -6,6 +6,7 @@ from DouBanFilmCritic.items import DouBanItem
 from bs4 import BeautifulSoup
 import re
 from urllib import parse
+import DouBanFilmCritic.settings as settings
 
 '''
 爬取豆瓣网站上[雷神3：诸神黄昏]电影的短评，爬取的内容包括，评论人、评论内容、评论星星数、以及
@@ -53,11 +54,19 @@ class DoubanSpider(scrapy.Spider):
 
     # 编写start_requests(self)方法，第一次会默认调取该方法中的请求
     def start_requests(self):
-        print("准备爬取...")
-        return [Request("https://accounts.douban.com/login", meta={'cookiejar': 1}, callback=self.parse)]
+        # 是否模拟登陆标识，0不登录 1登陆
+        login = settings.LOGIN
+        if login == 1:
+            print("此时需要模拟登陆...")
+            return [Request("https://accounts.douban.com/login", meta={'cookiejar': 1}, callback=self.parse)]
+        else:
+            print("此时不需要模拟登陆...")
+            return [Request(
+                "https://movie.douban.com/subject/25821634/comments?start=0&limit=20&sort=new_score&status=P&percent_type=",
+                callback=self.next)]
 
     def parse(self, response):
-        print("进入爬取方法..")
+        print("进入模拟登陆方法..")
         # 获取验证码图片所在地址，获取后赋给captcha变量，此时captcha为一个列表
         captcha = response.xpath('//img[@id="captcha_image"]/@src').extract()
         # 因为登陆时有时网页有验证码，有时没有验证码
@@ -77,11 +86,11 @@ class DoubanSpider(scrapy.Spider):
                 # 设置登陆账号，格式为账号字段名：具体账号
                 "form_email": "357270546@qq.com",
                 # 设置登陆密码，格式为密码字段名：具体密码
-                "form_password": "****",
+                "form_password": "Aa8616645",
                 # 设置验证码，格式为验证码字段名：具体验证码
                 "captcha-solution": captcha_value,
                 # 设置需要转向的网址
-                "redir": "https://movie.douban.com/subject/25821634/comments?start=40&limit=20&sort=new_score&status=P&percent_type="
+                "redir": "https://movie.douban.com/subject/25821634/comments?start=0&limit=20&sort=new_score&status=P&percent_type="
             }
         else:
             print("此时没有验证码")
@@ -90,9 +99,9 @@ class DoubanSpider(scrapy.Spider):
                 # 设置登陆账号，格式为账号字段名：具体账号
                 "form_email": "357270546@qq.com",
                 # 设置登陆密码，格式为密码字段名：具体密码
-                "form_password": "****",
+                "form_password": "Aa8616645",
                 # 设置需要转向的网址
-                "redir": "https://movie.douban.com/subject/25821634/comments?start=40&limit=20&sort=new_score&status=P&percent_type="
+                "redir": "https://movie.douban.com/subject/25821634/comments?start=0&limit=20&sort=new_score&status=P&percent_type="
             }
         print("登陆中...")
         # 通过FormRequest.form_response()进行登录
@@ -109,8 +118,8 @@ class DoubanSpider(scrapy.Spider):
 
     def next(self, response):
         soup = BeautifulSoup(response.body, 'lxml')
-        print("进入雷神3：诸神黄昏 短评网页：【{0}】".format(response.url))
-
+        # print("进入雷神3：诸神黄昏 短评网页：【{0}】".format(response.url))
+        print("当前URL：【{0}】".format(response.url))
         # 匹配内容的正则
         # content_re = re.compile(r'<p class="">.*</p>')
         i = 1
@@ -124,7 +133,7 @@ class DoubanSpider(scrapy.Spider):
                 model["star"] = b["class"][0][7:]
                 # print(b["class"][0][7:])
 
-            for c in one.find_all("a", class_="j a_vote_comment"):
+            for c in one.find_all("span", class_="votes"):
                 model["result"] = c.string
                 # print(c.string)
 
@@ -151,10 +160,15 @@ class DoubanSpider(scrapy.Spider):
 
         url = ""
         for url_ in soup.find_all('a', class_="next"):
-            urls = 'https://movie.douban.com/subject/25821634/comments?'
+            urls = 'https://movie.douban.com/subject/25821634/comments'
             url = urls + url_.get('href')
-            print(url_.get('href'))
-        print(url)
-
-        yield Request(url=parse.urljoin(response.url, url), meta={'cookiejar': response.meta["cookiejar"]},
-                      callback=self.next, dont_filter=True)
+            # print(url_.get('href'))
+        print("下个URL：【{0}】".format(url))
+        # 是否模拟登陆标识，0不登录 1登陆
+        login = settings.LOGIN
+        if login == 1:
+            yield Request(url=parse.urljoin(response.url, url), meta={'cookiejar': response.meta["cookiejar"]},
+                          callback=self.next, dont_filter=True)
+        else:
+            yield Request(
+                url, callback=self.next, dont_filter=True)

@@ -8,9 +8,10 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html
 #     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html
-
+LIST = ['sz000016']
 BOT_NAME = 'stock'
-
+FEED_EXPORT_ENCODING = 'utf-8'
+LOG_FILE = "log.txt"  # log信息输出到log.txt文件
 SPIDER_MODULES = ['stock.spiders']
 NEWSPIDER_MODULE = 'stock.spiders'
 
